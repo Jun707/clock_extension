@@ -1,7 +1,7 @@
 let seconds = 0;
 let minutes = 0;
 let hours = 0;
-
+let popupPort = null;
 function updateClock() {
     seconds++;
 
@@ -20,9 +20,31 @@ function updateClock() {
     const secondsStr = seconds.toString().padStart(2, '0');
 
     const clock = `${hoursStr}:${minutesStr}:${secondsStr}`;
+    if (popupPort) {
+        // Send the clock time to the popup
+        popupPort.postMessage({ clock });
+    }
 
-    // Send the clock time to the popup
-    chrome.action.setPopup({ popup: `popup.html?time=${encodeURIComponent(clock)}` });
+    chrome.action.setBadgeText({ text: clock });
+    chrome.action.setPopup({
+        popup: `popup.html?time=${encodeURIComponent(clock)}`
+    });
+
+
 }
 
 setInterval(updateClock, 1000);
+
+updateClock();
+
+// Listen for the popup's connection
+chrome.runtime.onConnect.addListener(function (port) {
+    if (port.name === 'popupConnection') {
+        popupPort = port;
+
+        // Listen for the popup disconnecting
+        port.onDisconnect.addListener(function () {
+            popupPort = null;
+        });
+    }
+});
