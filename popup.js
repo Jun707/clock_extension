@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const clockElement = document.getElementById('clock');
+    const clockElement = document.querySelector('.clock');
 
     // Open a connection to the background script
     const port = chrome.runtime.connect({ name: 'popupConnection' });

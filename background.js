@@ -2,7 +2,43 @@ let seconds = 0;
 let minutes = 0;
 let hours = 0;
 let popupPort = null;
+let currentHostname = ""; // Store the current hostname
+let intervalId= null;
+
+function hostnameCheck() {
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+        const url = new URL(tabs[0].url);
+        const newHostname = url.hostname;
+
+        if (newHostname !== currentHostname) {
+            console.log("Hostname changed to:", newHostname);
+            currentHostname = newHostname;
+
+            if(intervalId) {
+                console.log(intervalId);
+                clearInterval(intervalId);
+            }
+
+            intervalId=setInterval(updateClock, 1000);
+            
+            // Call any function or perform actions related to hostname changes here
+            // For example, you can call another function:
+            // doSomethingOnHostnameChange(newHostname);
+        }
+    });
+}
+
+// Listen for tab updates to check for hostname changes
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+    hostnameCheck();
+});
+
+// Call the hostnameCheck function initially
+hostnameCheck();
+
+// Clock function
 function updateClock() {
+
     seconds++;
 
     if (seconds >= 60) {
@@ -30,13 +66,7 @@ function updateClock() {
         popup: `popup.html?time=${encodeURIComponent(clock)}`
     });
 
-
 }
-
-setInterval(updateClock, 1000);
-
-updateClock();
-
 // Listen for the popup's connection
 chrome.runtime.onConnect.addListener(function (port) {
     if (port.name === 'popupConnection') {
