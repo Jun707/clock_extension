@@ -3,28 +3,53 @@ let minutes = 0;
 let hours = 0;
 let popupPort = null;
 let currentHostname = ""; // Store the current hostname
+let newHostname="";
+
 let intervalId= null;
+let tabList= new Map();
+let url;
+
 
 function hostnameCheck() {
-    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-        const url = new URL(tabs[0].url);
-        const newHostname = url.hostname;
+    // Listen for tab creation to capture the hostname when a new tab is created
+    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+        if (changeInfo.status==="complete" && tab.url) {
+            url = new URL(tab.url);
+            newHostname = url.hostname;
+            if (newHostname!==currentHostname) {
 
-        if (newHostname !== currentHostname) {
-            console.log("Hostname changed to:", newHostname);
-            currentHostname = newHostname;
-
-            if(intervalId) {
-                console.log(intervalId);
-                clearInterval(intervalId);
+                console.log(currentHostname);
+                tabList.set(currentHostname,1);
+                console.log(tabList);
+                currentHostname = newHostname;
+                
+                if (!tabList.has(currentHostname)) {
+                    tabList.set(currentHostname,0);
+                    console.log(tabList);
+                };
             }
 
+        };
+    });
+
+    // Look for when tabs switch happen
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+        url = new URL(tabs[0].url);
+        newHostname = url.hostname;
+
+        if (newHostname !== currentHostname) {
+            currentHostname = newHostname;
+
+            if (intervalId) {
+                clearInterval(intervalId);
+            };
+
             intervalId=setInterval(updateClock, 1000);
-            
+
             // Call any function or perform actions related to hostname changes here
             // For example, you can call another function:
             // doSomethingOnHostnameChange(newHostname);
-        }
+        };
     });
 }
 
