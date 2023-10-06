@@ -8,6 +8,13 @@ let tabList = new Map();
 let url;
 const hostnameTimeMap = {}; // Store hostname-time clock pairs
 
+
+function handleWindowSwitches(windowId) {
+    if (windowId) {
+        handleTabSwitches();
+    }
+}
+
 // Function to handle tab updates and capture the hostname when a new tab is created or updated
 function handleTabUpdates(tabId, changeInfo, tab) {
     if (changeInfo.status === "complete" && tab.url) {
@@ -140,6 +147,9 @@ chrome.tabs.onUpdated.addListener(handleTabUpdates);
 
 // Listen for tab switches to handle hostname changes
 chrome.tabs.onActivated.addListener(handleTabSwitches);
+
+// Listen for window switches to handle timer
+chrome.windows.onFocusChanged.addListener(handleWindowSwitches);
 
 // Initial setup
 handleTabSwitches();
