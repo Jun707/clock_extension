@@ -142,5 +142,4 @@ chrome.tabs.onUpdated.addListener(handleTabUpdates);
 chrome.tabs.onActivated.addListener(handleTabSwitches);
 
 // Initial setup
-updateClock();
-setInterval(updateClock, 1000);
+handleTabSwitches();
