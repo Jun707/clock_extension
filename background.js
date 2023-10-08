@@ -8,13 +8,39 @@ let tabList = new Map();
 let url;
 const hostnameTimeMap = {}; // Store hostname-time clock pairs
 
-
+// Function to handle when window switch
 function handleWindowSwitches(windowId) {
     if (windowId) {
         handleTabSwitches();
     }
 }
 
+// Function to update and store hostname-clock pairs in chrome.storage.local
+function updateAndStoreHostnameClockPair(hostname, clock) {
+    const data = {};
+    data[hostname] = clock;
+
+    chrome.storage.local.set(data, function () {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+        } else {
+            console.log(`Data stored for ${hostname}`);
+        }
+    });
+}
+
+// Function to retrieve hostname-clock pairs from chrome.storage.local
+function retrieveHostnameClockPairs(callback) {
+    chrome.storage.local.get(null, function (result) {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+        } else {
+            console.log("Retrieved data from storage:", result);
+            callback(result);
+        }
+    });
+}
+   
 // Function to handle tab updates and capture the hostname when a new tab is created or updated
 function handleTabUpdates(tabId, changeInfo, tab) {
     if (changeInfo.status === "complete" && tab.url) {
@@ -25,19 +51,31 @@ function handleTabUpdates(tabId, changeInfo, tab) {
             // Handle switching to a new hostname
             if (currentHostname) {
                 // Store the time clock for the previous hostname
-                hostnameTimeMap[currentHostname] = getTimeClock();
-                console.log(`Time clock for ${currentHostname}: ${hostnameTimeMap[currentHostname]}`);
+                const previousClock = getTimeClock();
+                updateAndStoreHostnameClockPair(currentHostname, previousClock);
+                console.log(`Time clock for ${currentHostname}: ${previousClock}`);
             }
 
             currentHostname = newHostname;
 
-            if (currentHostname in hostnameTimeMap) {
-                // Switch to the stored time clock for the current hostname
-                setTimeClock(hostnameTimeMap[currentHostname]);
-            } else {
-                // Reset the time clock for the new hostname
-                resetTimeClock();
+            retrieveHostnameClockPairs(function (pairs) {
+                if (currentHostname in pairs) {
+                    // Switch to the stored time clock for the current hostname
+                    setTimeClock(pairs[currentHostname]);
+                } else {
+                    // Reset the time clock for the new hostname
+                    resetTimeClock();
+                }
+            });
+
+            if (intervalId) {
+                clearInterval(intervalId);
             }
+
+            intervalId = setInterval(updateClock, 1000);
+            // Call any function or perform actions related to hostname changes here
+            // For example, you can call another function:
+            // doSomethingOnHostnameChange(newHostname);
         }
     }
 }
@@ -52,19 +90,22 @@ function handleTabSwitches() {
             // Handle switching to a new hostname
             if (currentHostname) {
                 // Store the time clock for the previous hostname
-                hostnameTimeMap[currentHostname] = getTimeClock();
-                console.log(`Time clock for ${currentHostname}: ${hostnameTimeMap[currentHostname]}`);
+                const previousClock = getTimeClock();
+                updateAndStoreHostnameClockPair(currentHostname, previousClock);
+                console.log(`Time clock for ${currentHostname}: ${previousClock}`);
             }
 
             currentHostname = newHostname;
 
-            if (currentHostname in hostnameTimeMap) {
-                // Switch to the stored time clock for the current hostname
-                setTimeClock(hostnameTimeMap[currentHostname]);
-            } else {
-                // Reset the time clock for the new hostname
-                resetTimeClock();
-            }
+            retrieveHostnameClockPairs(function (pairs) {
+                if (currentHostname in pairs) {
+                    // Switch to the stored time clock for the current hostname
+                    setTimeClock(pairs[currentHostname]);
+                } else {
+                    // Reset the time clock for the new hostname
+                    resetTimeClock();
+                }
+            });
 
             if (intervalId) {
                 clearInterval(intervalId);
