@@ -4,9 +4,6 @@ let hours = 0;
 let popupPort = null;
 let currentHostname = "";
 let intervalId = null;
-let tabList = new Map();
-let url;
-const hostnameTimeMap = {}; // Store hostname-time clock pairs
 
 // Function to handle when window switch
 function handleWindowSwitches(windowId) {
@@ -57,7 +54,7 @@ function handleTabUpdates(tabId, changeInfo, tab) {
             }
 
             currentHostname = newHostname;
-
+            
             retrieveHostnameClockPairs(function (pairs) {
                 if (currentHostname in pairs) {
                     // Switch to the stored time clock for the current hostname
@@ -138,11 +135,13 @@ function updateClock() {
     const secondsStr = seconds.toString().padStart(2, '0');
 
     const clock = `${hoursStr}:${minutesStr}:${secondsStr}`;
+    
     setTimeClock(clock);
 
     if (popupPort) {
         // Send the clock time to the popup
         popupPort.postMessage({ clock });
+        popupPort.postMessage({currentHostname})
     }
 
     chrome.action.setBadgeText({ text: clock });

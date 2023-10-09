@@ -1,0 +1,19 @@
+html:not(.mobile) {
+    width: 15rem;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+h1 {
+  color: #333;
+}
+
+.clock {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0078d4;
+}
