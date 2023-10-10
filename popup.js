@@ -6,11 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Listen for messages from the background script
     port.onMessage.addListener(function (message) {
+        if (message.hostname) { // Check if a hostname message is received
+            hostnameElement.textContent = message.hostname; // Display the hostname
+        }
+
         if (message.clock) {
             clockElement.textContent = message.clock;
-        }
-        if (message.currentHostname) { // Check if a hostname message is received
-            hostnameElement.textContent = message.currentHostname; // Display the hostname
         }
     });
 

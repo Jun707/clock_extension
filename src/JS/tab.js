@@ -1,8 +1,9 @@
-let currentHostname = "";
-let intervalId = null;
-
 import clockModule from "./clock.js";
 import storageModule from "./storage.js";
+import { setCurrentSite } from "./popupUI.js";
+
+let currentHostname = "";
+let intervalId = null;
 // Function to handle when window switch
 function handleWindowSwitches(windowId) {
     if (windowId) {
@@ -15,7 +16,7 @@ function handleTabUpdates(tabId, changeInfo, tab) {
     if (changeInfo.status === "complete" && tab.url) {
         const url = new URL(tab.url);
         const newHostname = url.hostname;
-
+        setCurrentSite(newHostname);
         if (newHostname !== currentHostname) {
             // Handle switching to a new hostname
             if (currentHostname) {
@@ -42,9 +43,7 @@ function handleTabUpdates(tabId, changeInfo, tab) {
             }
 
             intervalId = setInterval(clockModule.updateClock, 1000);
-            // Call any function or perform actions related to hostname changes here
-            // For example, you can call another function:
-            // doSomethingOnHostnameChange(newHostname);
+
         }
     }
 }
@@ -55,6 +54,7 @@ function handleTabSwitches() {
         if(tabs[0] && tabs[0].url) {
             const url = new URL(tabs[0].url);
             const newHostname = url.hostname;
+            setCurrentSite(newHostname);
 
             if (newHostname !== currentHostname) {
                 // Handle switching to a new hostname
@@ -66,7 +66,8 @@ function handleTabSwitches() {
                 }
     
                 currentHostname = newHostname;
-    
+                
+
                 storageModule.retrieveHostnameClockPairs(function (pairs) {
                     if (currentHostname in pairs) {
                         // Switch to the stored time clock for the current hostname

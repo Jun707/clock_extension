@@ -1,4 +1,4 @@
-let popupPort = null;
+import { setPopClock } from "./popupUI.js";
 let seconds = 0;
 let minutes = 0;
 let hours = 0;
@@ -23,17 +23,7 @@ function updateClock() {
     const clock = `${hoursStr}:${minutesStr}:${secondsStr}`;
     
     setTimeClock(clock);
-
-    if (popupPort) {
-        // Send the clock time to the popup
-        popupPort.postMessage({ clock });
-        // popupPort.postMessage({currentHostname})
-    }
-
-    chrome.action.setBadgeText({ text: clock });
-    chrome.action.setPopup({
-        popup: `popup.html?time=${encodeURIComponent(clock)}`
-    });
+    setPopClock(clock);
 }
 
 // Function to set the current time clock
@@ -49,7 +39,6 @@ function getTimeClock() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-
 // Function to reset the time clock
 function resetTimeClock() {
     hours = 0;
@@ -57,17 +46,6 @@ function resetTimeClock() {
     seconds = 0;
 }
 
-// Listen for the popup's connection
-chrome.runtime.onConnect.addListener(function (port) {
-    if (port.name === 'popupConnection') {
-        popupPort = port;
-
-        // Listen for the popup disconnecting
-        port.onDisconnect.addListener(function () {
-            popupPort = null;
-        });
-    }
-});
 const clockModule = {
     updateClock,
     setTimeClock,

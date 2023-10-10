@@ -1,4 +1,4 @@
-import tabModule from "./tab.js";
+import tabModule from "./src/JS/tab.js";
 
 // Listen for tab creation and updates to capture the hostname
 chrome.tabs.onUpdated.addListener(tabModule.handleTabUpdates);
