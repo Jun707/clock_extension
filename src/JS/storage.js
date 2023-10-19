@@ -1,3 +1,5 @@
+import clockModule from "./clock.js";
+import tabModule from "./tab.js";
 // Function to update and store hostname-clock pairs in chrome.storage.local
 function updateAndStoreHostnameClockPair(hostname, clock) {
     const data = {};
@@ -22,11 +24,28 @@ function retrieveHostnameClockPairs(callback) {
             callback(result);
         }
     });
+
+    
 }
+
+function clearHistory() {
+    // Clear the local storage after the clock has been reset
+    chrome.storage.local.clear(function() {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+        } else {
+            console.log("Storage cleared successfully");
+        }
+    });
+}
+
+
+
 
 const storageModule = {
     updateAndStoreHostnameClockPair,
     retrieveHostnameClockPairs,
+    clearHistory,
 };
 
 export default storageModule;

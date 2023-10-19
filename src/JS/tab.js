@@ -38,11 +38,7 @@ function handleTabUpdates(tabId, changeInfo, tab) {
                 }
             });
 
-            if (intervalId) {
-                clearInterval(intervalId);
-            }
-
-            intervalId = setInterval(clockModule.updateClock, 1000);
+            resetIntervalId();
 
         }
     }
@@ -78,21 +74,27 @@ function handleTabSwitches() {
                     }
                 });
     
-                if (intervalId) {
-                    clearInterval(intervalId);
-                }
-    
-                intervalId = setInterval(clockModule.updateClock, 1000);
+                resetIntervalId();
         }
 
         }
     });
 }
 
+function resetIntervalId() {
+    if (intervalId) {
+        clearInterval(intervalId);
+    }
+
+    intervalId = setInterval(clockModule.updateClock, 1000);
+
+}
+
 const tabModule = {
     handleTabSwitches,
     handleTabUpdates,
-    handleWindowSwitches
+    handleWindowSwitches,
+    resetIntervalId,
 };
 
 export default tabModule;
