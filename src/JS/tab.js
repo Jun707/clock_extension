@@ -24,12 +24,12 @@ function handleTabUpdates(tabId, changeInfo, tab) {
         setCurrentSite(newHostname);
         if (newHostname !== currentHostname) {
             // Handle switching to a new hostname
-            if (currentHostname) {
-                // Store the time clock for the previous hostname
-                const previousClock = clockModule.getTimeClock();
-                storageModule.updateAndStoreHostnameClockPair(currentHostname, previousClock);
-                console.log(`Time clock for ${currentHostname}: ${previousClock}`);
-            }
+            // if (currentHostname) {
+            //     // Store the time clock for the previous hostname
+            //     const previousClock = clockModule.getTimeClock();
+            //     storageModule.updateAndStoreHostnameClockPair(currentHostname, previousClock);
+            //     console.log(`Time clock for ${currentHostname}: ${previousClock}`);
+            // }
 
             currentHostname = newHostname;
             
@@ -59,12 +59,12 @@ function handleTabSwitches() {
 
             if (newHostname !== currentHostname) {
                 // Handle switching to a new hostname
-                if (currentHostname) {
-                    // Store the time clock for the previous hostname
-                    const previousClock = clockModule.getTimeClock();
-                    storageModule.updateAndStoreHostnameClockPair(currentHostname, previousClock);
-                    console.log(`Time clock for ${currentHostname}: ${previousClock}`);
-                }
+                // if (currentHostname) {
+                //     // Store the time clock for the previous hostname
+                //     const previousClock = clockModule.getTimeClock();
+                //     storageModule.updateAndStoreHostnameClockPair(currentHostname, previousClock);
+                //     console.log(`Time clock for ${currentHostname}: ${previousClock}`);
+                // }
     
                 currentHostname = newHostname;
                 

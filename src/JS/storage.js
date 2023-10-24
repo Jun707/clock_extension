@@ -7,7 +7,7 @@ function updateAndStoreHostnameClockPair(hostname, clock) {
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         } else {
-            console.log(`Data stored for ${hostname}`);
+            // console.log(`Data stored for ${hostname}`);
         }
     });
 }
