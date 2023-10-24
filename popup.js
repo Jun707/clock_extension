@@ -1,5 +1,3 @@
-import storageModule from "./src/JS/storage.js";
-import clockModule from "./src/JS/clock.js";
 const resetButtonElement = document.querySelector('.clear');
 const clockElement = document.querySelector('.clock');
 const hostnameElement = document.querySelector('.hostname');
@@ -15,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (message.clock) {
-            
             clockElement.textContent = message.clock;
         }
 
@@ -31,18 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// In popup.js
+// reset function
 resetButtonElement.addEventListener('click', function () {
     chrome.runtime.sendMessage({ action: 'clearHistory' });
-    storageModule.clearHistory();
+    clockElement.textContent='00:00:00';
 });
-
-
-// In popup.js
-chrome.runtime.onMessage.addListener(function (message) {
-    if (message.newClock) {
-        clockElement.textContent = message.newClock;
-    }
-});
-
-
