@@ -1,4 +1,6 @@
 import { setPopClock } from "./popupUI.js";
+import tabModule from "./tab.js";
+import storageModule from "./storage.js";
 
 let seconds = 0;
 let minutes = 0;
@@ -21,9 +23,9 @@ function updateClock() {
     const hoursStr = hours.toString().padStart(2, '0');
     const minutesStr = minutes.toString().padStart(2, '0');
     const secondsStr = seconds.toString().padStart(2, '0');
-
     const clock = `${hoursStr}:${minutesStr}:${secondsStr}`;
-    
+
+    storageModule.updateAndStoreHostnameClockPair(tabModule.getHostname(),getTimeClock());
     setTimeClock(clock);
     setPopClock(clock);
 }

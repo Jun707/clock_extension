@@ -4,6 +4,11 @@ import { setCurrentSite } from "./popupUI.js";
 
 let currentHostname = "";
 let intervalId = null;
+
+function getHostname() {
+    return currentHostname;
+}
+
 // Function to handle when window switch
 function handleWindowSwitches(windowId) {
     if (windowId) {
@@ -95,6 +100,7 @@ const tabModule = {
     handleTabUpdates,
     handleWindowSwitches,
     resetIntervalId,
+    getHostname,
 };
 
 export default tabModule;
