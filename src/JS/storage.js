@@ -1,5 +1,3 @@
-import clockModule from "./clock.js";
-import tabModule from "./tab.js";
 // Function to update and store hostname-clock pairs in chrome.storage.local
 function updateAndStoreHostnameClockPair(hostname, clock) {
     const data = {};
@@ -24,8 +22,6 @@ function retrieveHostnameClockPairs(callback) {
             callback(result);
         }
     });
-
-    
 }
 
 function clearHistory() {
@@ -38,9 +34,6 @@ function clearHistory() {
         }
     });
 }
-
-
-
 
 const storageModule = {
     updateAndStoreHostnameClockPair,

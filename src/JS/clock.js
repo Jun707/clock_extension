@@ -1,7 +1,9 @@
 import { setPopClock } from "./popupUI.js";
+
 let seconds = 0;
 let minutes = 0;
 let hours = 0;
+
 // Clock function
 function updateClock() {
     seconds++;
