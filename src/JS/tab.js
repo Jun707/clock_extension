@@ -23,16 +23,7 @@ function handleTabUpdates(tabId, changeInfo, tab) {
         const newHostname = url.hostname;
         setCurrentSite(newHostname);
         if (newHostname !== currentHostname) {
-            // Handle switching to a new hostname
-            // if (currentHostname) {
-            //     // Store the time clock for the previous hostname
-            //     const previousClock = clockModule.getTimeClock();
-            //     storageModule.updateAndStoreHostnameClockPair(currentHostname, previousClock);
-            //     console.log(`Time clock for ${currentHostname}: ${previousClock}`);
-            // }
-
             currentHostname = newHostname;
-            
             storageModule.retrieveHostnameClockPairs(function (pairs) {
                 if (currentHostname in pairs) {
                     // Switch to the stored time clock for the current hostname
@@ -42,9 +33,7 @@ function handleTabUpdates(tabId, changeInfo, tab) {
                     clockModule.resetTimeClock();
                 }
             });
-
             resetIntervalId();
-
         }
     }
 }
@@ -56,19 +45,8 @@ function handleTabSwitches() {
             const url = new URL(tabs[0].url);
             const newHostname = url.hostname;
             setCurrentSite(newHostname);
-
             if (newHostname !== currentHostname) {
-                // Handle switching to a new hostname
-                // if (currentHostname) {
-                //     // Store the time clock for the previous hostname
-                //     const previousClock = clockModule.getTimeClock();
-                //     storageModule.updateAndStoreHostnameClockPair(currentHostname, previousClock);
-                //     console.log(`Time clock for ${currentHostname}: ${previousClock}`);
-                // }
-    
                 currentHostname = newHostname;
-                
-
                 storageModule.retrieveHostnameClockPairs(function (pairs) {
                     if (currentHostname in pairs) {
                         // Switch to the stored time clock for the current hostname
@@ -78,10 +56,8 @@ function handleTabSwitches() {
                         clockModule.resetTimeClock();
                     }
                 });
-    
                 resetIntervalId();
-        }
-
+            }
         }
     });
 }
@@ -90,9 +66,7 @@ function resetIntervalId() {
     if (intervalId) {
         clearInterval(intervalId);
     }
-
     intervalId = setInterval(clockModule.updateClock, 1000);
-
 }
 
 const tabModule = {

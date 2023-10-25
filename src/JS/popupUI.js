@@ -42,4 +42,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         clockModule.resetTimeClock();
         storageModule.clearHistory();
     }
+    if (message.action === 'resetTimer') {
+        clockModule.resetTimeClock();
+    }
 });
