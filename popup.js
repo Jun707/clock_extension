@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Listen for messages from the background script
     port.onMessage.addListener(function (message) {
         if (message.hostname) {
-            hostnameElement.textContent = message.hostname;
+            hostnameElement.textContent += message.hostname;
         }
 
         if (message.clock) {
@@ -55,12 +55,12 @@ showButtonElement.addEventListener('click', function retrieveHostnameClockPairs(
                     const itemContent = document.createTextNode(`${key}: ${result[key]}`)
                     item.appendChild(itemContent);
                     historyList.appendChild(item);
-                    console.log(`${key}: ${result[key]}`);
-                    
                 }
             }
             console.log(historyList);
             bodyElement.appendChild(historyList);
+            showButtonElement.remove();
+            bodyElement.style.height = "auto";
         }
     });
 })
